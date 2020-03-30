@@ -5,7 +5,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "import": "node scripts/import.js"
   },
   "dependencies": {
     "chai": "4.2.0",

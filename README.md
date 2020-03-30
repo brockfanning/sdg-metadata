@@ -22,11 +22,10 @@ make serve
 Convert an Excel file of English metadata into templates for translation:
 
 ```
-node scripts/excel-to-gettext.js my-excel-file.xlsx
+npm run import my-excel-file.xlsx
 ```
 
-* The Excel file must contain one sheet per indicator (named with the indicator ID, such as "1.1.1").
-* Each sheet must contain an `ID` column and a `VALUE` column.
+* The Excel file must use the [SDG Metadata Authoring Tool](https://opendataenterprise.github.io/sdg-metadata/assets/SDG Authoring Tool.xlsx) template.
 
 ## Adding a new language
 
