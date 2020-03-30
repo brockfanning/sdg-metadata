@@ -1,7 +1,7 @@
 _build/
 node_modules
 package-lock.json
-*.xlsx
+/*.xlsx
 .vscode
 www/api/**/*.json
 www/api/**/*.xml
