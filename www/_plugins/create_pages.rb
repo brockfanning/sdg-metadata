@@ -31,6 +31,19 @@ module SdgMetadataPlugins
       sort_order
     end
 
+    # Get an array of goals from an array of indicators.
+    def get_goals_from_indicators(indicators)
+      goals = indicators.map { |indicator| indicator.split('-')[0] }
+      goals.uniq.sort_by { |goal| get_sort_order(goal) }
+    end
+
+    # Get an array of targets from an array of indicators.
+    def get_targets_from_indicators(indicators)
+      targets = indicators.map { |indicator| indicator.split('-')[0] + '-' + indicator.split('-')[1] }
+      targets = targets.uniq.sort_by { |target| get_sort_order(target) }
+      targets.map { |target| target.gsub('-', '.') }
+    end
+
     # Get a miscellaneous translation.
     def translate_site_text(site, key, language)
       if site.data['store']['t'][language].key?('site')
@@ -97,7 +110,11 @@ module SdgMetadataPlugins
         end
         content = ''
         language = language
-        data = {'indicators' => indicators.keys.sort_by { |k| get_sort_order(k) }}
+        data = {
+          'goals' => get_goals_from_indicators(indicators.keys),
+          'targets' => get_targets_from_indicators(indicators.keys),
+          'indicators' => indicators.keys.sort_by { |k| get_sort_order(k) }
+        }
         site.pages << SdgMetadataPage.new(site, base, dir, layout, title, content, language, data)
       end
     end

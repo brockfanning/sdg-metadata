@@ -3,9 +3,90 @@ layout: single
 ---
 {{ site.data.languages[page.language].blurb | markdownify }}
 
-<ul>
+<div class="indicator-filter">
+  <label class="filter-label" for="goal-select">Goal: </label>
+  <select id="goal-select">
+  <option value="">Filter by goal</option>
+  {% for goal in page.goals %}
+  <option>{{ goal }}</option>
+  {% endfor %}
+  </select>
+  <button class="btn btn--inverse" aria-label="Reset goal filter" id="goal-reset">Reset</button>
+</div>
+
+<div class="indicator-filter">
+  <label class="filter-label" for="target-select">Target: </label>
+  <select id="target-select">
+  <option value="">Filter by target</option>
+  {% for target in page.targets %}
+  <option>{{ target }}</option>
+  {% endfor %}
+  </select>
+  <button class="btn btn--inverse" aria-label="Reset target filter" id="target-reset">Reset</button>
+</div>
+
+<script>
+function refreshList() {
+  var selectedGoal = document.getElementById('goal-select').value;
+  var selectedTarget = document.getElementById('target-select').value;
+  $('[data-indicator]').each(function() {
+    var display = true;
+    if (selectedGoal && $(this).data('goal') != selectedGoal) {
+      display = false;
+    }
+    if (selectedTarget && $(this).data('target') != selectedTarget) {
+      display = false;
+    }
+    if (display) {
+      $(this).show('slow');
+    }
+    else {
+      $(this).slideUp();
+    }
+  });
+}
+window.addEventListener('load', function() {
+  document.getElementById('goal-select').addEventListener('change', function() {
+    document.getElementById('target-select').value = '';
+    refreshList();
+  });
+  document.getElementById('target-select').addEventListener('change', refreshList);
+  document.getElementById('goal-reset').addEventListener('click', function() {
+    document.getElementById('goal-select').value = '';
+    refreshList();
+  });
+  document.getElementById('target-reset').addEventListener('click', function() {
+    document.getElementById('target-select').value = '';
+    refreshList();
+  });
+});
+</script>
+
+<style>
+.filter-label {
+  float: left;
+}
+.indicator-list {
+  clear: left;
+}
+.indicator-filter {
+  margin-top: 20px;
+}
+#target-select, #goal-select {
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid #888;
+}
+</style>
+
+<ul class="indicator-list">
 {% for indicator in page.indicators %}
-  <li>
+  {% assign parts = indicator | split: "-" %}
+  {% assign goal = parts[0] %}
+  {% assign target = parts[0] | append: "." | append: parts[1] %}
+  <li data-goal="{{ goal }}" data-target="{{ target }}" data-indicator="{{ indicator }}">
     <a class="btn btn--info" href="{{ indicator }}">{{ indicator | replace: '-', '.' }}</a>
   </li>
 {% endfor %}
